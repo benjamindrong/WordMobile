@@ -1,9 +1,9 @@
 package com.benjamindrong.wordmobile
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @param application keeping a reference to a context that has a shorter lifecycle than your
@@ -26,7 +26,22 @@ class WordViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Launching a new corouting to insert the data in a non-blocking way
+     * Launching a new coroutine to insert the data in a non-blocking way
      */
+    fun insert(word: Word) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insert(word)
+    }
 
+    /**
+     * Factory for constructing WordViewModel with parameter
+     */
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(WordViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return WordViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
+    }
 }
