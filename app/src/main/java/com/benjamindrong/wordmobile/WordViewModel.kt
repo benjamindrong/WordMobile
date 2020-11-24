@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
  * ViewModel can cause a memory leak.
  * Extending AndroidViewModel is the proper way to make your view model application context aware.
  */
-class WordViewModel(application: Application, handle: SavedStateHandle) : AndroidViewModel(application) {
+class WordViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: WordRepository
 //     Using LiveData and caching what getAlphabetizedWords returns has several benefits:
